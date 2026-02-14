@@ -24,10 +24,10 @@ func (p *SocketPlugin) RegisterRoutes(group fiber.Router) {
 
 func (p *SocketPlugin) handleInfo(c fiber.Ctx) error {
 	return c.JSON(fiber.Map{
-		"websocket":  true,
-		"endpoint":   "/ws",
-		"clients":    p.hub.ClientCount(),
-		"channels":   len(p.hub.Channels()),
+		"websocket": true,
+		"endpoint":  "/ws",
+		"clients":   p.hub.ClientCount(),
+		"channels":  len(p.hub.Channels()),
 	})
 }
 

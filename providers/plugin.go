@@ -31,7 +31,7 @@ func (p *SocketPlugin) ConfigKey() string      { return "socket" }
 
 func (p *SocketPlugin) DefaultConfig() map[string]any {
 	return map[string]any{
-		"max_connections":  1000,
+		"max_connections": 1000,
 		"ping_interval":   30,
 		"write_timeout":   10,
 		"read_buffer":     1024,
