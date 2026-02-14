@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+permissions:
+  contents: read
+
+env:
+  GO_VERSION: "1.24"
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: workspace/plugins/socket
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: orchestra-mcp/framework
+          path: workspace
+
+      - uses: actions/checkout@v4
+        with:
+          path: workspace/plugins/socket
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Run golangci-lint
+        uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+          args: --timeout=5m
+          working-directory: workspace/plugins/socket
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: workspace/plugins/socket
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: orchestra-mcp/framework
+          path: workspace
+
+      - uses: actions/checkout@v4
+        with:
+          path: workspace/plugins/socket
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Run tests
+        run: go test -race -coverprofile=coverage.txt ./...

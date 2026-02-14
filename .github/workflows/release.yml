@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: workspace/plugins/socket
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: orchestra-mcp/framework
+          path: workspace
+          fetch-depth: 0
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          path: workspace/plugins/socket
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.24"
+
+      - name: Build
+        run: go build ./...
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
